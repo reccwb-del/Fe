@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Fredoka", "Baloo 2", sans-serif;
+  --font-title: "Chewy", "Bubblegum Sans", sans-serif;
+}
+
+@layer utilities {
+  .font-title {
+    font-family: "Chewy", "Bubblegum Sans", sans-serif;
+  }
+  .font-body {
+    font-family: "Fredoka", "Baloo 2", sans-serif;
+  }
+}
+
+/* Custom twinkling stars keyframes */
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.animate-twinkle {
+  animation: twinkle 3s infinite ease-in-out;
+}
+
+/* Little bounce hover effect for beautiful tactile kids buttons */
+.button-bounce-hover {
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.button-bounce-hover:hover {
+  transform: scale(1.05);
+}
+.button-bounce-hover:active {
+  transform: scale(0.95);
+}
+
+/* Gradient background for visual storybook layout */
+.bg-pastel-sky {
+  background: linear-gradient(135deg, #FFE5A0 0%, #A7D8F5 100%);
+}
+
+.bg-pastel-night {
+  background: linear-gradient(135deg, #A7D8F5 0%, #D9C7F5 100%);
+}
+
+.bg-pastel-pink {
+  background: linear-gradient(135deg, #FFC9DE 0%, #FFE5A0 100%);
+}
+
+/* Customized scrollbar for kids map */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 230, 180, 0.5);
+  border-radius: 12px;
+}
+::-webkit-scrollbar-thumb {
+  background: #A7D8F5;
+  border: 3px solid #FFE5A0;
+  border-radius: 12px;
+}

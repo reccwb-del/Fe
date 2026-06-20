@@ -1,0 +1,6 @@
+{
+  "name": "Aventureros de la Fe",
+  "description": "Devocional infantil de 30 dias.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
