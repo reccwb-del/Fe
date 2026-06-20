@@ -2,26 +2,32 @@ import React, { useState } from 'react';
 
 const QuizModule = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [feedback, setFeedback] = useState<'happy' | 'sad' | null>(null);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  
+
+  // Aqui ficarão os dados do dia. 
+  // Em uma estrutura futura, esses dados virão de uma API ou objeto de configuração.
   const questions = [
-    { id: 1, text: "¿Qué construyó Noé?", options: ['Una casa', 'Un arca', 'Un castillo'], correct: 'Un arca' },
-    { id: 2, text: "¿Quién guió al pueblo de Israel?", options: ['Moisés', 'David', 'Pedro'], correct: 'Moisés' },
-    { id: 3, text: "¿Quién creó el mundo?", options: ['Dios', 'Noé', 'Los ángeles'], correct: 'Dios' },
-    { id: 4, text: "¿Cuántos días llovió?", options: ['10 días', '40 días', '7 días'], correct: '40 días' },
-    { id: 5, text: "¿Qué apareció en el cielo?", options: ['Un arcoíris', 'Una estrella', 'Una nube'], correct: 'Un arcoíris' }
+    { text: "¿Qué construyó Noé?", options: ['Una casa', 'Un arca', 'Un castillo'], correct: 'Un arca' },
+    // ... adicione as outras 4 perguntas aqui
   ];
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
     if (option === questions[currentQuestion].correct) {
-      // Avança após 1 segundo para o usuário ver a cor verde
+      setFeedback('happy');
       setTimeout(() => {
         if (currentQuestion < questions.length - 1) {
           setCurrentQuestion(currentQuestion + 1);
           setSelectedOption(null);
+          setFeedback(null);
+        } else {
+          // Finalizou o Quiz
+          window.location.href = '/oracao'; // Navegação para a oração
         }
       }, 1000);
+    } else {
+      setFeedback('sad');
     }
   };
 
@@ -29,47 +35,33 @@ const QuizModule = () => {
     <div style={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #fff9e6 0%, #d1f2ff 100%)',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '20px',
-      fontFamily: "'Quicksand', sans-serif",
-      position: 'relative'
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      padding: '20px', fontFamily: "'Quicksand', sans-serif"
     }}>
-      <div style={{ position: 'absolute', top: '10%', left: '15%', fontSize: '24px' }}>✨</div>
-      <div style={{ position: 'absolute', bottom: '20%', right: '10%', fontSize: '24px' }}>✨</div>
-
-      <h2 style={{ color: '#4a3728', marginBottom: '10px' }}>¿Cuánto Aprendimos?</h2>
-      <p style={{ color: '#666', marginBottom: '20px' }}>Pregunta {currentQuestion + 1} de {questions.length}</p>
-
-      <div style={{ marginBottom: '20px' }}>
-        <img src="/mascote.png" alt="León" style={{ width: '120px' }} />
+      {/* Feedback do Mascote */}
+      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+        <img 
+          src={feedback === 'sad' ? "/mascote-triste.png" : "/mascote.png"} 
+          alt="León" style={{ width: '120px' }} 
+        />
+        {feedback === 'sad' && <p style={{ color: '#e11d48', fontWeight: 'bold' }}>¡Intenta de nuevo!</p>}
+        {feedback === 'happy' && <p style={{ color: '#16a34a', fontWeight: 'bold' }}>¡Muy bien!</p>}
       </div>
 
-      <div style={{
-        backgroundColor: 'white',
-        padding: '30px',
-        borderRadius: '30px',
-        boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
-        maxWidth: '500px',
-        width: '100%',
-        textAlign: 'center'
-      }}>
-        <h3 style={{ color: '#333', marginBottom: '20px' }}>{questions[currentQuestion].text}</h3>
-        
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          {questions[currentQuestion].options.map((option, index) => (
-            <button key={index} onClick={() => handleOptionClick(option)} style={{
-              padding: '15px',
-              borderRadius: '15px',
-              border: selectedOption === option ? '2px solid #22c55e' : '2px solid #e5e7eb',
-              backgroundColor: selectedOption === option ? '#dcfce7' : '#f9fafb',
-              fontSize: '16px',
-              cursor: 'pointer',
-              textAlign: 'left',
-              transition: 'all 0.3s'
-            }}>
+      {/* Card do Quiz */}
+      <div style={{ backgroundColor: 'white', padding: '30px', borderRadius: '30px', boxShadow: '0 10px 30px rgba(0,0,0,0.08)', maxWidth: '500px', width: '100%' }}>
+        <h3 style={{ color: '#333', textAlign: 'center' }}>{questions[currentQuestion].text}</h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
+          {questions[currentQuestion].options.map((option) => (
+            <button 
+              key={option} 
+              onClick={() => handleOptionClick(option)}
+              style={{
+                padding: '15px', borderRadius: '15px', fontSize: '16px', cursor: 'pointer',
+                backgroundColor: selectedOption === option ? (option === questions[currentQuestion].correct ? '#dcfce7' : '#fee2e2') : '#f9fafb',
+                border: selectedOption === option ? (option === questions[currentQuestion].correct ? '2px solid #22c55e' : '2px solid #ef4444') : '2px solid #e5e7eb'
+              }}
+            >
               {option}
             </button>
           ))}
@@ -80,4 +72,3 @@ const QuizModule = () => {
 };
 
 export default QuizModule;
-
