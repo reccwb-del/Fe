@@ -1,8 +1,6 @@
 import React from "react";
 import { ArrowLeft, Lock, Star, Play, Award } from "lucide-react";
 import Mascot from "./Mascot";
-import { playClickSound } from "../utils/audio";
-import { DayData } from "../data/days";
 
 interface DayMapProps {
   daysData: DayData[];
