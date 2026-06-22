@@ -15,4 +15,4 @@ export default function Reward({ dayNum, temaName, onGoHome }: any) {
       <button onClick={onGoHome} className="mt-8 py-4 px-8 bg-green-500 text-white rounded-full">Volver al inicio</button>
     </div>
   );
-}
+} 
