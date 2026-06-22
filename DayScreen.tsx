@@ -1,15 +1,13 @@
 import React, { useState } from "react";
-import { ArrowLeft, BookOpen, Heart, HelpCircle, Target } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import VerseModule from "./VerseModule";
 import PrayerModule from "./PrayerModule";
 import QuizModule from "./QuizModule";
 import MissionModule from "./MissionModule";
-import { DayData } from "../data/days";
-import { playClickSound } from "../utils/audio";
 
 interface DayScreenProps {
-  dayData: DayData;
+  dayData: any;
   onCompleteDay: () => void;
   onGoBack: () => void;
 }
@@ -20,11 +18,9 @@ export default function DayScreen({ dayData, onCompleteDay, onGoBack }: DayScree
   const [phase, setPhase] = useState<Phase>("verse");
 
   const handleGoBack = () => {
-    playClickSound();
     onGoBack();
   };
 
-  // Build breadcrumb steps
   const steps = [
     { key: "verse", label: "Versículo", icon: "📖", color: "bg-[#FFE5A0]" },
     { key: "prayer", label: "Oración", icon: "🙏", color: "bg-[#D9C7F5]" },
@@ -42,7 +38,6 @@ export default function DayScreen({ dayData, onCompleteDay, onGoBack }: DayScree
         <div className="max-w-md mx-auto flex flex-col space-y-3">
           
           <div className="flex items-center justify-between">
-            {/* Back Button */}
             <button
               id="dayscreen_back_btn"
               onClick={handleGoBack}
@@ -52,16 +47,13 @@ export default function DayScreen({ dayData, onCompleteDay, onGoBack }: DayScree
               Salir
             </button>
 
-            {/* Central heading */}
             <h2 className="font-title text-xl text-amber-900">
               🦁 Día {dayData.dia} • {dayData.tema}
             </h2>
 
-            {/* Empty space to balance */}
             <div className="w-12 h-9" />
           </div>
 
-          {/* Kids visual steps tracker */}
           <div className="grid grid-cols-4 gap-1.5 pt-1">
             {steps.map((step, idx) => {
               const isActive = idx === currentStepIndex;
@@ -70,77 +62,4 @@ export default function DayScreen({ dayData, onCompleteDay, onGoBack }: DayScree
               return (
                 <div key={step.key} className="flex flex-col items-center space-y-1">
                   <div
-                    className={`w-full h-2 rounded-full transition-all duration-300 ${
-                      isActive
-                        ? `${step.color} border border-amber-500 animate-pulse`
-                        : isPassed
-                        ? "bg-emerald-400"
-                        : "bg-slate-200"
-                    }`}
-                  />
-                  <div className="flex items-center gap-0.5 mt-0.5">
-                    <span className="text-[10px] leading-none">{step.icon}</span>
-                    <span
-                      className={`text-[9px] font-bold uppercase select-none tracking-tight hidden sm:inline ${
-                        isActive ? "text-amber-900" : isPassed ? "text-slate-500" : "text-slate-400"
-                      }`}
-                    >
-                      {step.label}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-        </div>
-      </div>
-
-      {/* 2. MAIN ACTIVE MODULE STAGE */}
-      <div className="flex-1 w-full max-w-md mx-auto px-4 mt-6 flex flex-col justify-center">
-        
-        <AnimatePresence mode="wait">
-          {phase === "verse" && (
-            <div key="verse" className="w-full">
-              <VerseModule
-                dayNum={dayData.dia}
-                tema={dayData.tema}
-                versiculo={dayData.versiculo}
-                onNext={() => setPhase("prayer")}
-              />
-            </div>
-          )}
-
-          {phase === "prayer" && (
-            <div key="prayer" className="w-full">
-              <PrayerModule
-                oracion={dayData.oracion}
-                onNext={() => setPhase("quiz")}
-              />
-            </div>
-          )}
-
-          {phase === "quiz" && (
-            <div key="quiz" className="w-full">
-              <QuizModule
-                quizQuestions={dayData.quiz}
-                onNext={() => setPhase("mission")}
-              />
-            </div>
-          )}
-
-          {phase === "mission" && (
-            <div key="mission" className="w-full">
-              <MissionModule
-                dayNum={dayData.dia}
-                misionText={dayData.mision}
-                onCompleteDay={onCompleteDay}
-              />
-            </div>
-          )}
-        </AnimatePresence>
-
-      </div>
-    </div>
-  );
-}
+                    className={`w-full h-2 rounded-full transition-all
