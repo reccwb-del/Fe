@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Volume2, VolumeX, RefreshCw, ChevronRight, X, Heart, ShieldAlert } from "lucide-react";
-import { playClickSound, isSoundEnabled, setSoundEnabled } from "../utils/audio";
 
 interface SettingsProps {
   currentDay: number;
@@ -22,20 +21,11 @@ export default function Settings({
   onClose,
 }: SettingsProps) {
   const [showAdvanceConfirm, setShowAdvanceConfirm] = useState(false);
-  const [resetStep, setResetStep] = useState(0); // 0 = default, 1 = first warning, 2 = final warning
+  const [resetStep, setResetStep] = useState(0); 
 
   const handleToggleSound = () => {
     const newVal = !soundOn;
     onToggleSound(newVal);
-    // Let audio.ts know so it responds
-    setSoundEnabled(newVal);
-    if (newVal) {
-      setTimeout(() => playClickSound(), 100);
-    }
-  };
-
-  const clickSFX = () => {
-    playClickSound();
   };
 
   return (
@@ -44,23 +34,20 @@ export default function Settings({
         id="settings_modal"
         className="w-full max-w-md bg-white border-8 border-[#FFE5A0] rounded-[32px] shadow-2xl overflow-hidden transform scale-100 transition-all"
       >
-        {/* Header */}
         <div className="bg-[#FFE5A0] p-4 flex justify-between items-center relative">
           <h2 className="font-title text-2xl text-amber-900 flex items-center gap-2">
             ⚙️ Ajustes del Viaje
           </h2>
           <button
             id="close_settings"
-            onClick={() => { clickSFX(); onClose(); }}
+            onClick={() => onClose()}
             className="w-10 h-10 rounded-full bg-white border-2 border-amber-900 flex items-center justify-center text-amber-900 hover:bg-[#FFC9DE] transition-colors"
           >
             <X size={20} />
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-6 space-y-6">
-          {/* Sounds */}
           <div className="bg-[#A7D8F5]/30 p-4 rounded-2xl flex items-center justify-between">
             <div>
               <h3 className="font-bold text-lg text-sky-900">Efectos de Sonido</h3>
@@ -79,7 +66,6 @@ export default function Settings({
             </button>
           </div>
 
-          {/* Stats quick card */}
           <div className="bg-[#FFC9DE]/30 p-4 rounded-2xl flex justify-around text-center">
             <div>
               <div className="text-2xl">⭐</div>
@@ -94,12 +80,11 @@ export default function Settings({
             </div>
           </div>
 
-          {/* Skip Day (Avanzar día) */}
           <div className="border-t border-slate-100 pt-4 space-y-2">
             {!showAdvanceConfirm ? (
               <button
                 id="advance_day_settings"
-                onClick={() => { clickSFX(); setShowAdvanceConfirm(true); }}
+                onClick={() => setShowAdvanceConfirm(true)}
                 className="w-full h-12 rounded-2xl border-2 border-sky-400 bg-sky-50 text-sky-800 font-bold hover:bg-[#A7D8F5]/20 flex items-center justify-center gap-2 transition-all"
               >
                 <ChevronRight size={18} />
@@ -108,12 +93,12 @@ export default function Settings({
             ) : (
               <div className="bg-sky-50 p-4 border border-sky-200 rounded-2xl space-y-3">
                 <p className="text-xs text-sky-900 font-medium text-center">
-                  ¿Quieres saltar al siguiente día sin terminar el actual? ¡Conseguiras una estrella después!
+                  ¿Quieres saltar al siguiente día sin terminar el actual?
                 </p>
                 <div className="flex gap-2">
                   <button
                     id="confirm_advance_no"
-                    onClick={() => { clickSFX(); setShowAdvanceConfirm(false); }}
+                    onClick={() => setShowAdvanceConfirm(false)}
                     className="flex-1 py-2 bg-slate-200 text-slate-800 font-semibold rounded-xl text-xs"
                   >
                     No, seguir aquí
@@ -121,7 +106,6 @@ export default function Settings({
                   <button
                     id="confirm_advance_yes"
                     onClick={() => {
-                      clickSFX();
                       onAdvanceDay();
                       setShowAdvanceConfirm(false);
                     }}
@@ -134,12 +118,11 @@ export default function Settings({
             )}
           </div>
 
-          {/* Reset Adventure (Reiniciar aventura) with double confirmation */}
           <div className="border-t border-slate-100 pt-4">
             {resetStep === 0 ? (
               <button
                 id="reset_adventure_btn"
-                onClick={() => { clickSFX(); setResetStep(1); }}
+                onClick={() => setResetStep(1)}
                 className="w-full h-12 rounded-2xl border-2 border-rose-300 bg-rose-50 text-rose-800 font-bold hover:bg-rose-100 flex items-center justify-center gap-2 transition-all text-sm"
               >
                 <RefreshCw size={16} />
@@ -148,21 +131,13 @@ export default function Settings({
             ) : resetStep === 1 ? (
               <div className="bg-amber-50 border border-amber-200 p-4 rounded-2xl space-y-3">
                 <p className="text-xs text-amber-900 font-medium text-center">
-                  ⚠️ <strong>¿Estás seguro?</strong> Perderás todas tus {totalStars} estrellas ganadas hasta ahora y volverás al Día 1.
+                  ⚠️ <strong>¿Estás seguro?</strong> Perderás todo tu progreso.
                 </p>
                 <div className="flex gap-2">
-                  <button
-                    id="cancel_reset_1"
-                    onClick={() => { clickSFX(); setResetStep(0); }}
-                    className="flex-1 py-2 bg-slate-200 text-slate-800 font-semibold rounded-xl text-xs"
-                  >
+                  <button onClick={() => setResetStep(0)} className="flex-1 py-2 bg-slate-200 text-slate-800 font-semibold rounded-xl text-xs">
                     Cancelar
                   </button>
-                  <button
-                    id="confirm_reset_1"
-                    onClick={() => { clickSFX(); setResetStep(2); }}
-                    className="flex-1 py-2 bg-amber-500 text-white font-bold rounded-xl text-xs"
-                  >
+                  <button onClick={() => setResetStep(2)} className="flex-1 py-2 bg-amber-500 text-white font-bold rounded-xl text-xs">
                     Sí, entiendo
                   </button>
                 </div>
@@ -173,21 +148,14 @@ export default function Settings({
                   <ShieldAlert size={24} className="animate-bounce" />
                 </div>
                 <p className="text-xs text-rose-950 font-bold text-center">
-                  ❗ <strong>CONFIRMACIÓN FINAL</strong> ❗
-                  Esto eliminará permanentemente todo tu progreso. No se puede deshacer. ¿Seguro de borrar todo?
+                  ❗ <strong>CONFIRMACIÓN FINAL</strong> ❗ ¿Seguro de borrar todo?
                 </p>
                 <div className="flex gap-2">
-                  <button
-                    id="cancel_reset_2"
-                    onClick={() => { clickSFX(); setResetStep(0); }}
-                    className="flex-1 py-2 bg-[#B8E6C1] text-emerald-900 font-bold rounded-xl text-xs"
-                  >
-                    ¡No, salvar progreso!
+                  <button onClick={() => setResetStep(0)} className="flex-1 py-2 bg-[#B8E6C1] text-emerald-900 font-bold rounded-xl text-xs">
+                    ¡No, salvar!
                   </button>
                   <button
-                    id="confirm_reset_destructive"
                     onClick={() => {
-                      clickSFX();
                       onResetAventura();
                       setResetStep(0);
                       onClose();
@@ -202,9 +170,8 @@ export default function Settings({
           </div>
         </div>
 
-        {/* Footer info decoration */}
         <div className="bg-slate-50 p-2.5 text-center text-[10px] text-slate-400 font-medium">
-          Aventureros de la Fe • Hecho con <Heart size={10} className="inline fill-rose-400 stroke-none" /> para niños
+          Aventureros de la Fe • Hecho con <Heart size={10} className="inline fill-rose-400 stroke-none" />
         </div>
       </div>
     </div>
